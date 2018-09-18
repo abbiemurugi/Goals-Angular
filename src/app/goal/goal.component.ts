@@ -1,14 +1,22 @@
+import {GoalService} from '../goals/goal.service';
+import {AlertsService} from '../alert-service/alerts.service'
+import {HttpClient} from '@angular/common/http'
+import {Quote} from '../quote-class/quote'
 import { Component, OnInit } from '@angular/core';
-import {Goal} from '../goal'
+import {Goal} from "../goal";
 
 @Component({
   selector: 'app-goal',
   templateUrl: './goal.component.html',
+  providers:[GoalService],
   styleUrls: ['./goal.component.css']
 })
 export class GoalComponent implements OnInit {
-
-  goals = [
+  // goals = Goals;
+  goals:Goal[];
+  alertService:AlertsService;
+  quote:Quote;
+  goal = [
     new Goal(1,'Watch Finding Nemo','Find an online version and watch merlin find his son',new Date(2018,3,14) ),
     new Goal(2,'Buy Cookies','I have to buy cookies for the parrot',new Date(2018,6,9) ),
     new Goal(3, 'Get new Phone Case','Diana has her birthday coming up soon',new Date(2018,1,12) ),
@@ -23,6 +31,7 @@ export class GoalComponent implements OnInit {
         
         if(toDelete){
             this.goals.splice(index,1)
+            this.alertService.alertMe("Goal has been deleted")
         }
     }
 }
@@ -36,8 +45,20 @@ addNewGoal(goal){
   this.goals.push(goal)
 
 }
-constructor() { }
+    
+constructor(goalService:GoalService,alertService:AlertsService,private http:HttpClient) { 
+  this.goals = goalService.getGoals();
+  this.alertService = alertService;
+}
 ngOnInit() {
+
+    interface ApiResponse{
+    quote:string;
+    author:string
+    }
+  this.http.get<ApiResponse>("http://talaikis.com/api/quotes/random/").subscribe(data=>{
+   this.quote= new Quote(data.quote,data.author)
+  })
 }
 
 }
