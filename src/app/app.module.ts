@@ -11,7 +11,15 @@ import { GoalFormComponent } from './goal-form/goal-form.component';
 import { AlertsService } from './alert-service/alerts.service'
 import { NgProgressModule } from '@ngx-progressbar/core';
 import { NgProgressHttpModule } from '@ngx-progressbar/http';
+import { AboutComponent } from './about/about.component';
+import { RouterModule, Routes } from '@angular/router';
+import { NotFoundComponent } from './not-found/not-found.component';
 
+const routes:Routes=[
+  {path:"goals",component:GoalComponent},
+  {path:"about",component:AboutComponent},
+  {path:"**",component:NotFoundComponent}
+]
 @NgModule({
   declarations: [
     AppComponent,
@@ -19,14 +27,17 @@ import { NgProgressHttpModule } from '@ngx-progressbar/http';
     GoalDetailsComponent,
     StrikethroughDirective,
     DateCountPipe,
-    GoalFormComponent
+    GoalFormComponent,
+    AboutComponent,
+    NotFoundComponent
   ],
   imports: [
     BrowserModule,
     FormsModule,
     HttpClientModule,
     NgProgressModule.forRoot(),
-    NgProgressHttpModule
+    NgProgressHttpModule,
+    RouterModule.forRoot(routes)
   ],
   providers: [AlertsService],
   bootstrap: [AppComponent]
